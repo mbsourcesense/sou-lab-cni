@@ -33,12 +33,12 @@ The role executes the following tasks:
 ## How to test this
 
 ### Prerequisites
-- **Vagrant**: Make sure you have Vagrant installed to manage the VMs.
-- **Ansible**: The playbooks are executed using Ansible. Install Ansible locally before running the project.
+- **Vagrant and VirtualBox**: Make sure you have these installed to manage the VMs.
+- **Ansible**: The provisioning playbooks are executed using Ansible. Be sure to have it installed.
 
 ### Running the Project
 
-1. Clone this repository -XXXXXXINSERISCI LINKXXXXXXX-.
+1. Clone this repository https://github.com/mbsourcesense/sou-lab-cni.git.
 2. Run `vagrant up` to spin up the two VMs.
 3. After the provisioning is complete, you can access the services via reverse proxy at:
 
