@@ -1,0 +1,41 @@
+# Prometheus configuration
+- name: Create Prometheus configuration directory
+  file:
+    path: "{{ prometheus_config_dir }}"
+    state: directory
+    mode: '0755' 
+  when: is_soube2
+
+- name: Create Prometheus data directory (persistent) and set ownership
+  ansible.builtin.file:
+    path: "{{ prometheus_data_dir }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    recurse: yes
+  when: is_soube2
+
+- name: Deploy Prometheus configuration
+  template:
+    src: prometheus.yml.j2  
+    dest: "{{ prometheus_config_dir }}/prometheus.yml"
+    mode: '0644'
+  when: is_soube2
+
+
+# Prometheus container
+
+- name: Run Prometheus container
+  containers.podman.podman_container:
+    name: prometheus
+    image: docker.io/prom/prometheus:latest
+    state: started
+    ports:
+      - "{{ prometheus_port }}:9090"
+    volumes:
+      - "{{ prometheus_config_dir }}:/etc/prometheus"
+      - "{{ prometheus_data_dir }}:/prometheus:Z"
+    command: 
+      - '--config.file={{ prometheus_config_dir }}/prometheus.yml'
+  when: is_soube2

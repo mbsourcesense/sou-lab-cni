@@ -1,0 +1,4 @@
+- import_tasks: install_podman.yml
+- import_tasks: configure_prometheus.yml
+- import_tasks: configure_grafana.yml
+- import_tasks: configure_haproxy.yml

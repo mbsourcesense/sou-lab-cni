@@ -1,0 +1,8 @@
+# Install Podman on both vms
+- name: Ensure Podman is installed
+  ansible.builtin.yum:
+    name: podman
+    state: present
+
+
+

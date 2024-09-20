@@ -1,0 +1,52 @@
+global
+    maxconn 20000
+    ulimit-n  16384
+    log 127.0.0.1 local0
+    daemon
+
+defaults
+    log global
+    option httplog
+    option dontlognull
+    timeout connect 5000ms
+    timeout client  50000ms
+    timeout server  50000ms
+    maxconn 8000
+
+frontend fe_stats
+    bind *:8404
+    mode http 
+    stats uri /haproxy?stats
+    stats enable
+    stats refresh 10s
+    stats show-legends
+    stats auth admin:admin
+
+frontend fe_http
+    bind *:8080
+    mode http
+    log global
+    option httplog
+    option dontlognull
+    option logasap
+
+    acl is_grafana path_beg /grafana
+    acl is_prometheus path_beg /prometheus
+    acl is_prometheus_root path -i /prometheus
+
+    # Redirect /prometheus to /prometheus/graph
+    http-request redirect location /prometheus/graph if is_prometheus_root
+
+    use_backend grafana if is_grafana
+    use_backend prometheus if is_prometheus
+
+backend grafana
+    mode http
+    option httpchk
+    server grafana 192.168.57.21:3000 check
+
+backend prometheus
+    mode http
+    option httpchk
+    http-request replace-path ^/prometheus/(.*) /\1  # Strip /prometheus before forwarding to Prometheus
+    server prometheus 192.168.57.21:9090 check

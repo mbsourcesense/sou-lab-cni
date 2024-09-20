@@ -1,0 +1,22 @@
+# variables file for sou_podman
+
+
+is_soube2: "{{ inventory_hostname == 'soube2' }}"
+is_soufe1: "{{ inventory_hostname == 'soufe1' }}"
+
+#oerfisent prometheus files on the vm
+prometheus_config_dir: /etc/prometheus
+prometheus_data_dir: /vagrant_data/prometheus
+prometheus_user: 65534    # nobody, user used by prometheus
+prometheus_group: 65534   # nobody, user used by prometheus
+
+#oerfisent grafana files on the vm
+grafana_config_dir: /etc/grafana
+grafana_data_dir: /vagrant_data/grafana
+grafana_user: 472     #grafana user 
+grafana_group: 472    #grafana user
+
+#oerfisent haproxy files on the vm
+haproxy_config_dir: /etc/haproxy
+haproxy_data_dir: /vagrant_data/haproxy
+haproxy_run_dir: /run/haproxy

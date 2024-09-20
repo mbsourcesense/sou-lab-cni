@@ -1,0 +1,52 @@
+# Grafana configuration
+
+- name: Create Grafana configuration directory
+  file:
+    path: "{{ grafana_config_dir }}"
+    state: directory
+    mode: '0755'  
+  when: is_soube2 #execute these tasks only for the vm we want
+
+- name: Create Grafana data directory (persistent) and set ownership
+  ansible.builtin.file:
+    path: "{{ grafana_data_dir }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    recurse: yes
+  when: is_soube2
+
+- name: Create Grafana provisioning directory for datasources
+  file:
+    path: "{{ grafana_config_dir }}/provisioning/datasources"
+    state: directory
+    mode: '0755'
+  when: is_soube2
+
+- name: Deploy Prometheus datasource configuration to Grafana
+  template:
+    src: prometheus_datasource.yml.j2
+    dest: "{{ grafana_config_dir }}/provisioning/datasources/prometheus.yml"
+  when: is_soube2
+
+- name: Deploy Grafana configuration
+  template:
+    src: grafana.ini.j2
+    dest: "{{ grafana_config_dir }}/grafana.ini"
+    mode: '0644'  
+  when: is_soube2
+
+#Grafana container
+
+- name: Run Grafana container
+  containers.podman.podman_container:
+    name: grafana
+    image: docker.io/grafana/grafana:latest
+    state: started
+    ports:
+      - "{{ grafana_port }}:3000"
+    volumes:
+      - "{{ grafana_config_dir }}:/etc/grafana"
+      - "{{ grafana_data_dir }}:/var/lib/grafana:Z"
+  when: is_soube2

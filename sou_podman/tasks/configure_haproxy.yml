@@ -1,0 +1,46 @@
+# HAProxy configuration
+- name: Create HAProxy configuration directory
+  file:
+    path: "{{ haproxy_config_dir }}"
+    state: directory
+    mode: '0755'  
+  when: is_soufe1
+
+- name: Create HAProxy data directory (persistent)
+  file:
+    path: "{{ haproxy_data_dir }}"
+    state: directory
+    mode: '0755'
+  when: is_soufe1
+
+- name: Ensure HAProxy run directory exists with correct permissions
+  file:
+    path: "{{ haproxy_run_dir }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  when: is_soufe1
+
+- name: Deploy HAProxy configuration
+  template:
+    src: haproxy.cfg.j2
+    dest: "{{ haproxy_config_dir }}/haproxy.cfg"
+  when: is_soufe1
+
+# HAProxy container
+
+- name: Run HAProxy container
+  containers.podman.podman_container:
+    name: haproxy
+    image: docker.io/library/haproxy:latest
+    state: started
+    ports:
+      - "{{ haproxy_frontend_port }}:8080"
+      - "{{ haproxy_stats_port }}:8404"
+    volumes:
+      - "{{ haproxy_config_dir }}:/usr/local/etc/haproxy"
+      - "{{ haproxy_run_dir }}:/run/haproxy:rw"
+      - "{{ haproxy_data_dir }}:/var/lib/haproxy"
+    user: root
+  when: is_soufe1
