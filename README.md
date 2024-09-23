@@ -36,7 +36,7 @@ The role executes the following tasks:
 - **Vagrant and VirtualBox**: Make sure you have these installed to manage the VMs.
 - **Ansible**: The provisioning playbooks are executed using Ansible. Be sure to have it installed.
 
-###HTTPS Available with SSL certificate
+### HTTPS Available with SSL certificate
 
 This project requires SSL certificates for HTTPS configuration. You can generate self-signed certificates using the following commands:
 
