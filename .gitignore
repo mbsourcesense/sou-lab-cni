@@ -1,1 +1,3 @@
 .vagrant/
+sou_podman/files/*.pem
+certs/

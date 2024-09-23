@@ -22,22 +22,32 @@
     group: root
   when: is_soufe1
 
+# SSL Certificate
+- name: Copy SSL certificate to HAProxy VM
+  copy:
+    src: files/haproxy.pem  # Path to the certificate on your host
+    dest: "{{ haproxy_config_dir }}/haproxy.pem"  # Destination on the HAProxy VM
+    mode: '0644'
+  when: is_soufe1
+
+# HAProxy Configuration Deployment
 - name: Deploy HAProxy configuration
   template:
     src: haproxy.cfg.j2
     dest: "{{ haproxy_config_dir }}/haproxy.cfg"
   when: is_soufe1
 
-# HAProxy container
-
+# HAProxy container with HTTP and HTTPS
 - name: Run HAProxy container
   containers.podman.podman_container:
     name: haproxy
     image: docker.io/library/haproxy:latest
     state: started
     ports:
-      - "{{ haproxy_frontend_port }}:8080"
-      - "{{ haproxy_stats_port }}:8404"
+      - "{{ haproxy_frontend_http_port }}:8080"  # HTTP port for Grafana and Prometheus
+      - "{{ haproxy_frontend_https_port }}:8443"  # HTTPS port for Grafana and Prometheus
+      - "{{ haproxy_stats_port }}:8404"          # HTTP Stats port
+      - "9443:9443"                              # HTTPS Stats port for HAProxy
     volumes:
       - "{{ haproxy_config_dir }}:/usr/local/etc/haproxy"
       - "{{ haproxy_run_dir }}:/run/haproxy:rw"
