@@ -1,2 +1,0 @@
-inserire certificati
-inserire le versioni delle varie immagini come vars, per prevenire errori in futuro con versioni non compatibili

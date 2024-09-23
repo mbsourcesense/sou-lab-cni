@@ -1,3 +1,4 @@
 .vagrant/
 sou_podman/files/*.pem
 certs/
+.DS_Store
