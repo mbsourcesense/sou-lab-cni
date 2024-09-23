@@ -36,15 +36,32 @@ The role executes the following tasks:
 - **Vagrant and VirtualBox**: Make sure you have these installed to manage the VMs.
 - **Ansible**: The provisioning playbooks are executed using Ansible. Be sure to have it installed.
 
+###HTTPS Available with SSL certificate
+
+This project requires SSL certificates for HTTPS configuration. You can generate self-signed certificates using the following commands:
+
+# Generate a self-signed certificate and key
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout haproxy.key -out haproxy.crt
+
+# Combine the certificate and key into a single .pem file
+cat haproxy.crt haproxy.key > haproxy.pem
+
+Once generated, place the haproxy.pem file in the appropriate location, in sou_podman/files/haproxy.pem
+
 ### Running the Project
 
 1. Clone this repository https://github.com/mbsourcesense/sou-lab-cni.git.
 2. Run `vagrant up` to spin up the two VMs.
 3. After the provisioning is complete, you can access the services via reverse proxy at:
 
-        Grafana:        http://192.168.57.22:8080/grafana
-        Prometheus:     http://192.168.57.22:8080/prometheus/
-        HAProxy:        http://192.168.57.22:8404/haproxy?stats
+        Grafana (HTTP):        http://192.168.57.22:8080/grafana
+        Grafana (HTTPS):       https://192.168.57.22:8443/grafana
+
+        Prometheus (HTTP):     http://192.168.57.22:8080/prometheus
+        Prometheus (HTTPS):    https://192.168.57.22:8443/prometheus
+
+        HAProxy Stats (HTTP):  http://192.168.57.22:8404/haproxy?stats
+        HAProxy Stats (HTTPS): https://192.168.57.22:9443/haproxy?stats
 
 Thank you for reading this, 
 Manuel ;)
