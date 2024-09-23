@@ -55,10 +55,10 @@ Once generated, place the haproxy.pem file in the appropriate location, in sou_p
 3. After the provisioning is complete, you can access the services via reverse proxy at:
 
         Grafana (HTTP):        http://192.168.57.22:8080/grafana
-        Grafana (HTTPS):       https://192.168.57.22:8443/grafana
+        Grafana (HTTPS):       https://192.168.57.22/grafana
 
         Prometheus (HTTP):     http://192.168.57.22:8080/prometheus
-        Prometheus (HTTPS):    https://192.168.57.22:8443/prometheus
+        Prometheus (HTTPS):    https://192.168.57.22/prometheus
 
         HAProxy Stats (HTTP):  http://192.168.57.22:8404/haproxy?stats
         HAProxy Stats (HTTPS): https://192.168.57.22:9443/haproxy?stats
